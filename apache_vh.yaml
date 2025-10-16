@@ -1,0 +1,19 @@
+---
+- name: Example apache virtual host
+  hosts: all
+  become: true
+  remote_user: ubuntu
+  roles:
+    - handler
+
+  handlers:
+    - name: Restart apache
+      service:
+        name: apache2
+        state: restarted
+
+      # handlers:
+      #- name: Restart apache
+      #service:
+      #  name: apache2
+      #  state: restarted

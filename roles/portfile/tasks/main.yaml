@@ -1,0 +1,4 @@
+---
+- name: Add line to ports
+  shell: echo "Listen 8080" >> ports.conf
+

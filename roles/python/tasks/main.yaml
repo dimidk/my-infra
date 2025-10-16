@@ -1,0 +1,6 @@
+---
+- name: Create directory
+  file:
+    path: ./testdimi
+    state: directory
+

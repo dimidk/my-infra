@@ -1,0 +1,13 @@
+---
+- name: Change port file
+  hosts: all
+  become: true
+  remote_user: ubuntu
+  roles:
+    - portfile
+
+  handlers:
+    - name: Restart apache
+      service:
+        name: apache2
+        state: restarted

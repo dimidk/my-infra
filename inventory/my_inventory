@@ -1,39 +1,10 @@
 #############################################
 # my machines
 [all:children]
-app
-db
+hosts
 
-[app]
+[hosts]
 #tesapp1 ansible_host=10.10.137.241
-tesapp2 ansible_host=10.10.137.8
-tesapp3 ansible_host=10.10.137.230
+tesapp2 ansible_host=10.40.137.8 ansible_ssh_private_key=/home/ltsp/.ssh/id_rsa
+#tesapp3 ansible_host=10.40.137.230 ansible_ssh_private_key=/home/ltsp/.ssh/id_rsa
 
-[db]
-#modb1 ansible_host=10.10.128.78
-#modb2 ansible_host=10.10.128.79
-
-
-#############################################
-# moodle environments
-#[moodle_helios]         # version=5.0.1+2       mariadb=10.11   root=/home/sites/courses.ntua.gr/public_html
-#moapp1 php=php8.3
-#moapp2 php=php8.3
-#moapp3 php=php8.3
-#moapp7 php=php8.3
-#moapp8 php=php8.3
-
-#[moodle_courses]        # version=5.0.1+2       mariadb=10.11   root=/home/sites/courses.ntua.gr/public_html
-#moapp6 php=php8.3-fpm
-
-#[moodle_helios_2021]    # version=3.11.8+xx     mariadb=10.6    root=/home/sites/helios2021
-#moapp5 php=php8.0-fpm
-
-#[moodle_helios_2022]    # version=3.11.8+xx     mariadb=10.6    root=/home/sites/helios2022
-#moapp4 php=php8.0-fpm
-
-#[moodle_helios_2023]    # version=4.4.9+2       mariadb=10.6    root=/home/sites/helios2023
-#moapp3 php=php8.3
-
-#############################################
-# observability and monitoring

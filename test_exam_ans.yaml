@@ -1,0 +1,6 @@
+---
+- name: Ansible example
+  hosts: all
+  remote_user: ubuntu
+  roles:
+    - python

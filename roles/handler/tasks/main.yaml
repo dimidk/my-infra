@@ -1,0 +1,39 @@
+---
+- name: Create virtual host
+  file:
+    path: /home/sites/tesapp2.site.com
+    state: directory
+
+- name: add port
+  shell: echo "Listen 8080" >> /etc/apache2/ports.conf
+
+- name: change owner and permissions
+  file:
+    path: /home/sites/tesapp2.site.com
+    owner: www-data
+    group: www-data
+    mode: '0755'
+    recurse: yes
+    state: directory
+
+- name: create index file
+  template: src=index.html dest=/home/sites/tesapp2.site.com/index.html
+
+- name: copy conf file to virtual host
+  template: src=test2.site.com.conf dest=/etc/apache2/sites-available/tesapp2.site.com.conf
+
+- name: change index permissions
+  file:
+    path: /home/sites/tesapp2.site.com/index.html
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: enable site
+  shell: a2ensite tesapp2.site.com
+
+- name: change apacheconf
+  template: src=apache2.conf dest=/etc/apache2/apache2.conf
+  notify:
+    - Restart apache
+
