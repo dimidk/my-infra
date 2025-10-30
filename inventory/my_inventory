@@ -4,7 +4,7 @@
 hosts
 
 [hosts]
-#tesapp1 ansible_host=10.10.137.241
+tesapp1 ansible_host=10.10.137.241
 tesapp2 ansible_host=10.40.137.8 ansible_ssh_private_key=/home/ltsp/.ssh/id_rsa
-#tesapp3 ansible_host=10.40.137.230 ansible_ssh_private_key=/home/ltsp/.ssh/id_rsa
+tesapp3 ansible_host=10.40.137.230 ansible_ssh_private_key=/home/ltsp/.ssh/id_rsa
 
