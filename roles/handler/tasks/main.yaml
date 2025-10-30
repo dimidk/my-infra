@@ -1,39 +1,84 @@
 ---
 - name: Create virtual host
   file:
-    path: /home/sites/tesapp2.site.com
+    path: /home/sites/{{ inventory_hostname }}.site.com
     state: directory
 
 - name: add port
-  shell: echo "Listen 8080" >> /etc/apache2/ports.conf
+  blockinfile:
+    path: /etc/apache2/ports.conf
+    block: |
+      {% for port in ports %}
+      Listen {{ port }}
+      {% endfor %}
+
 
 - name: change owner and permissions
   file:
-    path: /home/sites/tesapp2.site.com
+    path: /home/sites/{{ inventory_hostname }}.site.com
     owner: www-data
     group: www-data
     mode: '0755'
     recurse: yes
     state: directory
 
-- name: create index file
-  template: src=index.html dest=/home/sites/tesapp2.site.com/index.html
+- name: copy index file 
+  copy: 
+    src: /var/www/html/index.html
+    dest: /home/sites/{{ inventory_hostname }}.site.com/index.html
 
 - name: copy conf file to virtual host
-  template: src=test2.site.com.conf dest=/etc/apache2/sites-available/tesapp2.site.com.conf
+  copy:
+    src: /etc/apache2/sites-available/000-default.conf
+    dest: /etc/apache2/sites-available/{{ inventory_hostname }}.site.com.conf
+
+- name: edit conf file
+  lineinfile:
+    path: /etc/apache2/sites-available/{{ inventory_hostname }}.site.com.conf
+    regexp: '^<VirtualHost *'
+    line: <VirtualHost *:8080>
+
+- name: add document root in conf file
+  blockinfile:
+    path: /etc/apache2/sites-available/{{ inventory_hostname }}.site.com.conf
+    insertafter: "ServerAdmin"
+    block: |
+      ServerName {{ inventory_hostname }}.site.com
+      DocumentRoot /home/sites/{{ inventory_hostname }}.site.com
+      <Directory /home/sites/{{ inventory_hostname }}.site.com/>
+        DirectoryIndex index.html
+        AllowOverride All
+        Allow from all
+      </Directory>
+
+- name: remove old document root
+  lineinfile:
+    path: /etc/apache2/sites-available/{{ inventory_hostname }}.site.com.conf
+    regexp: 'DocumentRoot /var/www/html'
+    state: absent
 
 - name: change index permissions
   file:
-    path: /home/sites/tesapp2.site.com/index.html
+    path: /home/sites/{{ inventory_hostname }}.site.com/index.html
     owner: www-data
     group: www-data
     mode: '0755'
 
 - name: enable site
-  shell: a2ensite tesapp2.site.com
+  shell: a2ensite {{ inventory_hostname }}.site.com
 
 - name: change apacheconf
-  template: src=apache2.conf dest=/etc/apache2/apache2.conf
-  notify:
-    - Restart apache
+  blockinfile:
+    path: /etc/apache2/apache2.conf
+    block: |
+      <Directory /home/sites/>
+        Options Indexes FollowSymLinks
+        AllowOverride none
+        Require all granted
+      </Directory>
+
+      <Directory /home/sites/{{ inventory_hostname }}.site.com/>
+        Options -Indexes
+      </Directory>
+  notify: Restart apache2
 

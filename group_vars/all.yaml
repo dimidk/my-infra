@@ -1,0 +1,2 @@
+ports: [8080,9090]
+hostnames: [tesapp2,tesapp3]
